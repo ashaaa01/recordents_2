@@ -33,7 +33,7 @@ export const colorsOutline = {
   warning: [colorsText.warning, 'border-yellow-500'],
   info: [colorsText.info, 'border-blue-500']
 }
-
+// text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2
 export const getButtonColor = (color, isOutlined, hasHover, isActive = false) => {
   const colors = {
     ring: {
@@ -64,7 +64,8 @@ export const getButtonColor = (color, isOutlined, hasHover, isActive = false) =>
       success: 'bg-emerald-600 dark:bg-emerald-500 text-white',
       danger: 'bg-red-600 dark:bg-red-500 text-white',
       warning: 'bg-yellow-600 dark:bg-yellow-500 text-white',
-      info: 'bg-blue-600 dark:bg-blue-500 text-white'
+      info: 'bg-blue-600 dark:bg-blue-500 text-white',
+      gradientBlue: 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl'
     },
     bgHover: {
       white: 'hover:bg-gray-100',

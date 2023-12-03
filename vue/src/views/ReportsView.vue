@@ -79,7 +79,7 @@ const chartOptions = ref({
             
             },
             title: {
-              text: 'Monthly Appointments, 2003',
+              text: 'Weekly Appointments, 2003',
               floating: true,
               offsetY: 330,
               align: 'center',
@@ -108,7 +108,7 @@ const chartOptions = ref({
 
 const series = ref([
   {
-    name: 'Inflation',
+    name: 'Appointments',
     data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
   },
 ]);
@@ -158,7 +158,7 @@ const exportRecords = async () => {
 <template>
   <SectionMain>
     <SectionTitleLineWithButton :icon="mdiTableBorder" title="Reports" main >
-     <button @click="exportRecords">Export Records</button>
+     <button @click="exportRecords">Download Records</button>
     </SectionTitleLineWithButton>
     
     <CardBox class="mb-6">

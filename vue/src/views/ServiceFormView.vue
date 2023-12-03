@@ -133,7 +133,7 @@ const notification = computed(() => store.state.notification)
 </script>
 
 <template>
-    <SectionMain>
+    <SectionMain> 
       <SectionTitleLineWithButton :icon="mdiPlusBox " :title="route.meta.title" main>
       </SectionTitleLineWithButton>    
         <NotificationBar v-if="Object.keys(errors).length" color="danger" :icon="mdiAlertCircle" :outline="notificationsOutline">

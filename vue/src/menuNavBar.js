@@ -45,12 +45,12 @@ export default [
   //   target: '_blank'
   // },
   
-  {
-    icon: mdiBellBadgeOutline,
-    label: 'Notification',
-    isDesktopNoLabel: true,
-    isNotif: true,
-  },
+  // {
+  //   icon: mdiBellBadgeOutline,
+  //   label: 'Notification',
+  //   isDesktopNoLabel: true,
+  //   isNotification: true,
+  // },
   {
     isCurrentUser: true,
     menu: [

@@ -46,7 +46,7 @@ const computedValue = computed({
       :type="type"
       :name="name"
       :input-value="value.text"
-      :label="value.text"
+      :label="value.services_label"
       :class="componentClass"
       class="mr-6 mb-3 last:mr-0"
     />

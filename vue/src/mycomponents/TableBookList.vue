@@ -2,7 +2,7 @@
 import { computed, ref, watchEffect } from 'vue'
 import { useStore } from 'vuex'
 import { useMainStore } from '@/stores/main'
-import { mdiEye, mdiTrashCan, mdiAccountEdit, mdiMagnify, mdiAsterisk   } from '@mdi/js'
+import { mdiEye, mdiTrashCan, mdiAccountEdit, mdiMagnify, mdiAsterisk, mdiPencil  } from '@mdi/js'
 import CardBoxModal from '@/components/CardBoxModal.vue'
 import TableCheckboxCell from '@/components/TableCheckboxCell.vue'
 import BaseLevel from '@/components/BaseLevel.vue'
@@ -93,11 +93,27 @@ const servicesPaginated = computed(() => {
   return filteredItems.value.slice(perPage.value * currentPage.value, perPage.value * (currentPage.value + 1));
 });
 
+const notAvailable = ()=> {
+  let message = ["Sorry, feature is not currently available."];
+  store.commit("notify", {
+    show: true,
+    type: "info",
+    title: 'Not available',
+    message: [message],
+  });
+
+}
+
+
 </script>
 
 <template>
 
   <CardBoxModal v-model="isModalActive" title="Details" classValue="flex overflow-x-auto shadow-lg max-h-modal w-5/12 md:w-3/5 lg:w-3/5 xl:w-4/12 z-50"  >
+    <p>Full Name: {{selectedRecord.full_name}}</p>
+    <p>Email: {{selectedRecord.email}}</p>
+    <p>Phone: {{selectedRecord.phone_number}}</p>
+    <p class="text-gray-500">Book Description:</p>
     <p>{{selectedRecord.title}}</p>
     <p>{{selectedRecord.description}}</p>
     <div v-if="selectedRecord.type === 'select'">
@@ -160,7 +176,8 @@ const servicesPaginated = computed(() => {
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
             <BaseButton color="info" :icon="mdiEye" small @click="showRecord(isModalActive = true, selectedRecord = services)" />
-            <BaseButton color="success" :icon="mdiAccountEdit" small :to="`/admin/edit-service/${services.id}`" />
+            <BaseButton color="success" :icon="mdiPencil" small @click="notAvailable" />
+            <!-- <BaseButton color="success" :icon="mdiPencil" small :to="`/admin/edit-service/${services.id}`" /> -->
           </BaseButtons>
         </td>
       </tr>

@@ -48,7 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/time', WorkHourController::class); 
 
     // Staff
-    Route::get('/book', [StaffController::class, 'bookList' ]); 
+    Route::get('/book-appointment', [StaffController::class, 'bookList' ]); 
     Route::get('/schedule', [StaffController::class, 'schedList' ]); 
     Route::put('/book-status/{id}', [StaffController::class, 'updateStatus' ]); 
     Route::put('/schedule-status/{id}', [StaffController::class, 'updateSchedule' ]); 

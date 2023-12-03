@@ -26,7 +26,35 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
+// store.dispatch('getBookServiceList');
+
+const time = [
+    {code: '30m', label: '30 minutes'},
+    {code: '1h', label: '1 hour'},
+    {code: '2h', label: '2 hours'},
+  ];
+
+const getTime = (code)=> {
+   const timeLabel = time.find(time => time.code == code);
+   return timeLabel.label;
+} 
+
+const bookServices  = ref([]);
 const services = computed(() => store.state.serviceList);
+
+// services.value.forEach(item => {
+//   const modifiedOptions = item.data.options.map(dataItem => {
+//     // Modify each dataItem within item.data.options and add 'services_label'
+//     return { ...dataItem, services_label: dataItem.text+' ('+getTime(dataItem.time)+')' };
+//   });
+
+//   // Update item.data.options with modifiedOptions
+//   item.data.options = modifiedOptions;
+
+//   // Push the updated item into 'bookServices'
+//   bookServices.value.push(item);
+// });
+
 const timeList = computed(() => store.state.timeList);
 const bookList = computed(() => store.state.bookList);
 
@@ -64,7 +92,8 @@ function submit() {
   store
     .dispatch('saveBook', saveData.value)
     .then((res) => {
-      store.commit("alert", { show: false});
+      // store.commit("alert", { show: false});
+      successAlert()
       router.push({
         name: "book-list"
       });
@@ -100,6 +129,39 @@ function getFilteredTimes(date) {
   return filteredTimes;
 }
 
+watchEffect(() => {
+ services.value.forEach(item => {
+  const modifiedOptions = item.data.options.map(dataItem => {
+    // Modify each dataItem within item.data.options and add 'services_label'
+    return { ...dataItem, services_label: dataItem.text+' ('+getTime(dataItem.time)+')' };
+  });
+
+    // Update item.data.options with modifiedOptions
+    item.data.options = modifiedOptions;
+
+    // Push the updated item into 'bookServices'
+    bookServices.value.push(item);
+  });
+});
+
+const successAlert = (data) => {
+  store.commit("notify", {
+    show: true,
+    type: "success",
+    title: 'Successfully Updated!',
+    message: [],
+  });
+}
+
+
+const dangerAlert = (errors) => {
+  store.commit("alert", {
+      show: true,
+      type: "danger",
+      title: 'Ensure that these requirements are met:',
+      message: errors,
+    });
+}
 
 </script>
 
@@ -156,7 +218,7 @@ function getFilteredTimes(date) {
                   Services Offered
                 </label>
               </div>
-              <div class="mb-5"  v-for="service in services" :key="service.id" >
+              <div class="mb-5"  v-for="service in bookServices" :key="service.id" >
                 <FormField :label="service.title" >
                   <FormCheckRadioGroup
                     v-model="formData.service_data"

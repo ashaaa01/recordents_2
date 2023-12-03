@@ -166,7 +166,8 @@ class ServiceController extends Controller
     private function createServiceOption($data){
         $validator = Validator::make($data, [
             'uuid' => 'required|string',
-            'text' => 'required|string'
+            'text' => 'required|string',
+            'time' => 'required|string'
         ]);
 
         return $validator->validated();

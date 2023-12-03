@@ -30,7 +30,7 @@ export default [
     label: 'Users'
   },
   {
-    label: 'Apointments',
+    label: 'Appointments',
     icon: mdiViewList,
     menu: [
       {
@@ -52,11 +52,11 @@ export default [
     label: 'Services',
     icon: mdiShapeOutline 
   },
-  {
-    to: '/admin/roles',
-    label: 'Roles',
-    icon: mdiTable
-  },
+  // {
+  //   to: '/admin/roles',
+  //   label: 'Roles',
+  //   icon: mdiTable
+  // },
   {
     to: '/admin/reports',
     label: 'Reports',

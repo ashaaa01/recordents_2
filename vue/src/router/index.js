@@ -28,6 +28,7 @@ import StaffAppointmentsSchedule from '@/views/AppointmentScheduleView.vue'
 // Patient Dashboard
 import PatientHome from '@/views/PatientHomeView.vue'
 import BookListView from '@/views/patient/BookListView.vue'
+import BookHistoryView from '@/views/patient/BookHistoryView.vue'
 import BookAppointmentFormView from '@/views/patient/BookAppointmentFormView.vue'
 
 
@@ -242,7 +243,7 @@ const routes = [
         },
         path: '/staff/appointments-schedule',
         name: 'staff-appointments-schedule',
-        component: BlankView
+        component: StaffAppointmentsSchedule
       },
       {
         meta: {
@@ -250,7 +251,7 @@ const routes = [
         },
         path: '/staff/appointments-history',
         name: 'staff-appointments-history',
-        component: BlankView
+        component: ApointmentHistoryView
       },
       // services
       {
@@ -348,7 +349,7 @@ const routes = [
         },
         path: '/schedules',
         name: 'patient-schedules',
-        component: ApointmentHistoryView
+        component: BlankView
       },
       {
         meta: {
@@ -356,7 +357,7 @@ const routes = [
         },
         path: '/history',
         name: 'patient-history',
-        component: ApointmentHistoryView
+        component: BookHistoryView
       },
       //
       // {

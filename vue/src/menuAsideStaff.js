@@ -29,16 +29,16 @@ export default [
     label: 'Appointments',
     icon: mdiViewList,
     menu: [
-      {
-        id: 300,
-        label: 'Appointments',
-        to: '/staff/appointments-list',
-      },
-      {
-        id: 400,
-        label: 'Schedule',
-        to: '/staff/appointments-schedule',
-      },
+      // {
+      //   id: 300,
+      //   label: 'Appointments',
+      //   to: '/staff/appointments-list',
+      // },
+      // {
+      //   id: 400,
+      //   label: 'Schedule',
+      //   to: '/staff/appointments-schedule',
+      // },
       {
         id: 500,
         label: 'History',

@@ -17,13 +17,14 @@ class RolesTableSeeder extends Seeder
             'role' => 'Admin',
             'description' => 'super role'
         ]);
-        DB::table('roles')->insert([
-            'role' => 'Staff',
-            'description' => 'can add, edit, and view'
-        ]);
+       
         DB::table('roles')->insert([
             'role' => 'Patient',
             'description' => 'can add, and view'
+        ]);
+         DB::table('roles')->insert([
+            'role' => 'Staff',
+            'description' => 'can add, edit, and view'
         ]);
     }
 }

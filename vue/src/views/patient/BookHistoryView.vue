@@ -9,7 +9,7 @@ import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.
 import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import CardBox from '@/components/CardBox.vue'
-import TableBookList from '@/mycomponents/TableBookList.vue'
+import TableBookHistory from '@/mycomponents/TableBookHistory.vue'
 
 import CardBoxModal2 from '@/mycomponents/CardBoxModalForm.vue'
 import DropdownButton from '@/mycomponents/DropdownButton.vue'
@@ -35,18 +35,10 @@ watchEffect(()=> {
 <template>
   <SectionMain>
     <SectionTitleLineWithButton :icon="mdiTableBorder" :title="route.meta.title" main>
-        <BaseButton
-          to="/book-appointment-form"
-          :icon="mdiPlus"
-          label="Book Appointment Form"
-          color="contrast"
-          rounded-full
-          small
-        />
     </SectionTitleLineWithButton> 
     <!-- <SectionTitleLineWithButton :icon="mdiAlertCircle" title="Empty variation" /> -->
-    <CardBox has-table>
-      <TableBookList v-if="showtable"/>
+   <CardBox has-table>
+      <TableBookHistory v-if="showtable"/>
       <CardBoxComponentEmpty v-else />
     </CardBox>
   </SectionMain>

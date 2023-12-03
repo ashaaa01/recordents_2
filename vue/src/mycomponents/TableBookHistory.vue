@@ -16,8 +16,7 @@ import FormControl from '@/components/FormControl.vue'
 
 
 defineProps({
-  checkable: Boolean,
-  role: String
+  checkable: Boolean
 })
 
 const mainStore = useMainStore()
@@ -26,12 +25,11 @@ const store = useStore()
 const isModalActive = ref(false)
 const isModalEdit = ref(false)
 const isModalDangerActive = ref(false)
+const checkable = ref(false)
 
-const items = computed(() => store.state.serviceList);
+const items = computed(() => store.state.bookList);
 
-const selectedRecord = ref({
-  data: { options: [] }
-});
+const selectedRecord = ref({});
 
 function showRecord(client) {
   
@@ -71,8 +69,10 @@ watchEffect(() => {
   // Filter items based on searchQuery and selectedRole
   filteredItems.value = items.value.filter((user) => {
     return (
-      (user.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-       user.description.toLowerCase().includes(searchQuery.value.toLowerCase()))
+      (user.date.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+       user.description.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+       user.book_status.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+       user.time.toLowerCase().includes(searchQuery.value.toLowerCase()))
     );
   });
 
@@ -93,38 +93,25 @@ const servicesPaginated = computed(() => {
   return filteredItems.value.slice(perPage.value * currentPage.value, perPage.value * (currentPage.value + 1));
 });
 
-const time = [
-    {code: '30m', label: '30 minutes'},
-    {code: '1h', label: '1 hour'},
-    {code: '2h', label: '2 hours'},
-  ];
-
-const getTime = (code)=> {
-   const timeLabel = time.find(time => time.code == code);
-   return timeLabel.label;
-} 
 </script>
 
 <template>
 
-  <CardBoxModal v-model="isModalActive" title="Service Details" classValue="flex overflow-x-auto shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-3/5 xl:w-6/12 z-50" >
-    <div class="w-full">
-      <div class="h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden">
-        <h1 class="text-5xl text-gray-900 pb-4 mb-4 border-b border-gray-200 leading-none dark:text-slate-200">{{selectedRecord.title}}</h1>
-        <p v-for="(option, ind) of selectedRecord.data.options"
-        :key="option.uuid" class="flex items-center text-gray-600 mb-2">
-          <span class="w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0">
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" class="w-3 h-3" viewBox="0 0 24 24">
-              <path d="M20 6L9 17l-5-5"></path>
-            </svg>
-          </span>{{option.text}} ({{getTime(option.time)}})
-        </p>
-        <router-link :to="`/admin/edit-service/${selectedRecord.id}`"  class="flex items-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded">Edit
-          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-auto" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
-        </router-link>
-        <p class="text-xs text-gray-500 mt-3">{{selectedRecord.description}}</p>
+  <CardBoxModal v-model="isModalActive" title="Details" classValue="flex overflow-x-auto shadow-lg max-h-modal w-5/12 md:w-3/5 lg:w-3/5 xl:w-4/12 z-50"  >
+    <p>{{selectedRecord.title}}</p>
+    <p>{{selectedRecord.description}}</p>
+    <div v-if="selectedRecord.type === 'select'">
+      <div
+        v-for="(option, ind) of selectedRecord.data.options"
+        :key="option.uuid"
+        class="flex items-center"
+      >
+      <label
+        :for="option.uuid"
+        class="ml-3 block text-sm font-medium text-gray-700"
+      >
+        {{ option.text }}
+      </label>
       </div>
     </div>
   </CardBoxModal>
@@ -144,29 +131,30 @@ const getTime = (code)=> {
     </div>
   </section>
   
-  <table>  
+  <table>
     <thead>
       <tr>
         <th v-if="checkable" />
-        <th>Service</th>
-        <th>Created At</th>
-        <th />
+        <th>Description</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Time</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="services in servicesPaginated" :key="services.id">
         <TableCheckboxCell v-if="checkable" @checked="checked($event, services)" />
-        <td data-label="Title">
-          {{ services.title }}
-        </td>
         <td data-label="Description">
-          {{ services.created_at }}
+          {{ services.description }}
         </td>
-        <td class="before:hidden lg:w-1 whitespace-nowrap">
-          <BaseButtons type="justify-start lg:justify-end" no-wrap>
-            <BaseButton color="info" :icon="mdiEye" small @click="showRecord(isModalActive = true, selectedRecord = services)" />
-            <BaseButton color="success" :icon="mdiAccountEdit" small :to="`/${role}/edit-service/${services.id}`" />
-          </BaseButtons>
+        <td data-label="Status">
+          {{ services.book_status }}
+        </td>
+        <td data-label="Date">
+          {{ services.date }}
+        </td>
+        <td data-label="Time">
+          {{ services.sched_time }}
         </td>
       </tr>
     </tbody>

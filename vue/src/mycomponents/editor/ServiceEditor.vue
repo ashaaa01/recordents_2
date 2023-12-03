@@ -228,6 +228,7 @@
           v-model="option.text"
           @change="dataChange"
           class="
+          mr-2
             w-full
             rounded-sm
             py-1
@@ -240,6 +241,28 @@
             dark:border-slate-700
           "
         />
+         <select
+          type="text"
+          tabindex="1"
+          v-model="option.time"
+          @change="dataChange"
+          class="
+            w-full
+            rounded-sm
+            py-1
+            px-2
+            text-xs
+            border border-gray-300
+            focus:border-indigo-500
+            dark:text-slate-400
+            dark:bg-slate-800
+            dark:border-slate-700
+          "
+        >
+        <option value="30m">30 minutes</option>
+        <option value="1h">1 hour</option>
+        <option value="2h">2 hours</option>
+        </select>
         <!-- Delete Option -->
         <button
           type="button"

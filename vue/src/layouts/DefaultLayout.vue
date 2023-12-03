@@ -130,6 +130,17 @@ const menuClick = (event, item) => {
       });
     });
   }
+
+  if (item.isNotification) {
+    let message = ["Sorry, feature is not currently available."];
+    store.commit("notify", {
+      show: true,
+      type: "info",
+      title: 'Not available',
+      message: [message],
+    });
+
+  }
 }
 
 

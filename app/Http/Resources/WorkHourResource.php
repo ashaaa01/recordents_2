@@ -17,7 +17,7 @@ class WorkHourResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'label' => (new DateTime($this->start_time))->format('g:i A').' - '.(new DateTime($this->end_time))->format('g:i A')
+            'label' => (new DateTime($this->start_time))->format('g:i A')
         ];
     }
 }

@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useMainStore } from '@/stores/main'
-import { mdiEye, mdiTrashCan, mdiAccountEdit, mdiMagnify, mdiAsterisk   } from '@mdi/js'
+import { mdiEye, mdiTrashCan, mdiAccountEdit, mdiMagnify, mdiAsterisk, mdiPencil   } from '@mdi/js'
 import CardBoxModal from '@/components/CardBoxModal.vue'
 import TableCheckboxCell from '@/components/TableCheckboxCell.vue'
 import BaseLevel from '@/components/BaseLevel.vue'
@@ -13,11 +13,14 @@ import UserCard from '@/components/UserCard.vue'
 import SelectedUserCard from '@/components/SelectedUserCard.vue'
 import FormField from '@/components/FormField.vue'
 import FormControl from '@/components/FormControl.vue'
+import FormCheckRadioGroup from '@/components/FormCheckRadioGroup.vue'
+
+import SelectedCard from '@/mycomponents/SelectedCard.vue'
+import CustomCardBoxModal from '@/mycomponents/CustomCardBoxModal.vue'
 
 
 defineProps({
-  checkable: Boolean,
-  role: String
+  checkable: Boolean
 })
 
 const mainStore = useMainStore()
@@ -27,16 +30,13 @@ const isModalActive = ref(false)
 const isModalEdit = ref(false)
 const isModalDangerActive = ref(false)
 
-const items = computed(() => store.state.serviceList);
+const items = computed(() => store.state.staffBookList);
 
-const selectedRecord = ref({
-  data: { options: [] }
-});
+const selectedRecord = ref({});
 
 function showRecord(client) {
   
 }
-
 
 const selectOptions = [
   { id: 5, label: '5 per page' },
@@ -71,8 +71,9 @@ watchEffect(() => {
   // Filter items based on searchQuery and selectedRole
   filteredItems.value = items.value.filter((user) => {
     return (
-      (user.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-       user.description.toLowerCase().includes(searchQuery.value.toLowerCase()))
+      (user.date.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+       user.description.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+       user.book_status.toLowerCase().includes(searchQuery.value.toLowerCase()))
     );
   });
 
@@ -93,41 +94,60 @@ const servicesPaginated = computed(() => {
   return filteredItems.value.slice(perPage.value * currentPage.value, perPage.value * (currentPage.value + 1));
 });
 
-const time = [
-    {code: '30m', label: '30 minutes'},
-    {code: '1h', label: '1 hour'},
-    {code: '2h', label: '2 hours'},
-  ];
+const changeStatus = ref({
+  id: '',
+  book_status: 'accept'
+});
 
-const getTime = (code)=> {
-   const timeLabel = time.find(time => time.code == code);
-   return timeLabel.label;
-} 
+const statusOptions = { accept: 'Accept', decline: 'Decline' }
+
+const handleUpdatedForm = (updatedValue) => {
+  
+  // modalValue.value = updatedValue; // Update the parentValue with the updated value
+  if(updatedValue == "submit") {
+    store
+      .dispatch('updateAppointmentStatus', changeStatus.value )
+      .then((res) => {
+        isModalEdit.value = false;
+        store.commit("notify", {
+          show: true,
+          type: "success",
+          title: 'Successfully Updated!',
+          message: [],
+        });
+      })
+      .catch(err => {
+        isModalEdit.value = false;
+        store.commit("notify", {
+          show: true,
+          type: "danger",
+          title: 'Failed to update!',
+          message: [],
+        });
+      });
+  }
+};
 </script>
 
 <template>
+  <CustomCardBoxModal hasCancel v-model="isModalActive" title="Book Details" classValue="flex overflow-x-auto shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-6/12 z-50" >
+    <SelectedCard :data="selectedRecord" />
+  </CustomCardBoxModal>
 
-  <CardBoxModal v-model="isModalActive" title="Service Details" classValue="flex overflow-x-auto shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-3/5 xl:w-6/12 z-50" >
-    <div class="w-full">
-      <div class="h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden">
-        <h1 class="text-5xl text-gray-900 pb-4 mb-4 border-b border-gray-200 leading-none dark:text-slate-200">{{selectedRecord.title}}</h1>
-        <p v-for="(option, ind) of selectedRecord.data.options"
-        :key="option.uuid" class="flex items-center text-gray-600 mb-2">
-          <span class="w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-400 text-white rounded-full flex-shrink-0">
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" class="w-3 h-3" viewBox="0 0 24 24">
-              <path d="M20 6L9 17l-5-5"></path>
-            </svg>
-          </span>{{option.text}} ({{getTime(option.time)}})
-        </p>
-        <router-link :to="`/admin/edit-service/${selectedRecord.id}`"  class="flex items-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded">Edit
-          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-auto" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
-        </router-link>
-        <p class="text-xs text-gray-500 mt-3">{{selectedRecord.description}}</p>
-      </div>
+  <CardBoxModal hasSubmit @update:modalForm="handleUpdatedForm" v-model="isModalEdit" title="Appointment Status"  classValue="flex overflow-x-auto shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-3/12 z-50 ">
+    <div class="mt-8">
+      <FormField>
+        <FormCheckRadioGroup
+          v-model="changeStatus.book_status"
+          name="status-radio"
+          type="radio"
+          :options="statusOptions"
+          isColumn
+        />
+    </FormField>
     </div>
   </CardBoxModal>
+  
 
   <section class="p-4">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -144,29 +164,30 @@ const getTime = (code)=> {
     </div>
   </section>
   
-  <table>  
+  <table>
     <thead>
       <tr>
         <th v-if="checkable" />
-        <th>Service</th>
-        <th>Created At</th>
-        <th />
+        <th>Description</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Time</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="services in servicesPaginated" :key="services.id">
         <TableCheckboxCell v-if="checkable" @checked="checked($event, services)" />
-        <td data-label="Title">
-          {{ services.title }}
-        </td>
         <td data-label="Description">
-          {{ services.created_at }}
+          {{ services.description }}
         </td>
-        <td class="before:hidden lg:w-1 whitespace-nowrap">
-          <BaseButtons type="justify-start lg:justify-end" no-wrap>
-            <BaseButton color="info" :icon="mdiEye" small @click="showRecord(isModalActive = true, selectedRecord = services)" />
-            <BaseButton color="success" :icon="mdiAccountEdit" small :to="`/${role}/edit-service/${services.id}`" />
-          </BaseButtons>
+        <td data-label="Status">
+          {{ services.book_status }}
+        </td>
+        <td data-label="Date">
+          {{ services.date }}
+        </td>
+        <td data-label="Time">
+          {{ services.sched_time }}
         </td>
       </tr>
     </tbody>

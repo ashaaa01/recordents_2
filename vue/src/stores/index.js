@@ -28,6 +28,7 @@ const store = createStore({
     clients: {},
     history: {},
     serviceList: [],
+    bookServiceList: [],
     selectedService: [],
     serviceTypes: ["text", "select", "radio", "checkbox", "textarea"],
     bookList: [],
@@ -211,11 +212,17 @@ const store = createStore({
           throw err;
         });
     },
+    getBookServiceList({commit}) {
+      return axiosClient.get('/service').then((res) => {
+        commit("setBookServiceList", res.data);
+      });
+    },
     getBookList({commit}) {
       return axiosClient.get('/book').then((res) => {
         commit("setBookList", res.data);
       });
     },
+
     // Work Hours
     getTimeList({commit}) {
       return axiosClient.get('/time').then((res) => {
@@ -241,7 +248,7 @@ const store = createStore({
     },
     // staff
     getStaffAppointmentList({commit}) {
-      return axiosClient.get('/book').then((res) => {
+      return axiosClient.get('/book-appointment').then((res) => {
         commit("setStaffBookList", res.data);
       });
     },
@@ -322,6 +329,9 @@ const store = createStore({
     },
     setServiceList: (state, service) => {
       state.serviceList = service.data;
+    },
+    setBookServiceList: (state, service) => {
+      state.bookServiceList = service.data;
     },
     setSelectedService: (state, service) => {
       state.selectedService = service.current;

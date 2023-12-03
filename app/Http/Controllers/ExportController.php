@@ -56,6 +56,8 @@ class ExportController extends Controller
             'first_name' => 'Name',
             'email' => 'Email',
             'phone_number' => 'Phone',
+            'address' => 'Address',
+            'start_time' => 'Start Time',
         ];
 
         $callback = function() use ($data, $customColumnNames) {
@@ -68,7 +70,13 @@ class ExportController extends Controller
             foreach ($data as $row) {
                 $rowData = [];
                 foreach ($customColumnNames as $column => $customName) {
-                    $rowData[] = $row->{$column};
+                    if ($column === 'start_time') {
+                        // Convert timestamp to desired date format
+                        $formattedDate = date('F j, Y', strtotime($row->{$column}));
+                        $rowData[] = $formattedDate;
+                    } else {
+                        $rowData[] = $row->{$column};
+                    }
                 }
                 fputcsv($file, $rowData);
             }
@@ -121,9 +129,8 @@ class ExportController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get([
                 'book_appointments.*',
-                'users.image_url',
-                'work_hours.start_time',
-                'work_hours.end_time',
+                'work_hours.start_time as start_time',
+                'work_hours.end_time as end_time',
             ]);
         return $book;
     }
